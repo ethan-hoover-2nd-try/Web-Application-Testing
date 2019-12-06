@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import Display from './components/Display';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(){
+    super();
+
+    this.state= {
+      strikes: 0,
+      balls: 0
+    }
+  }
+
+  resetStats = () => {
+    this.setState({
+      strikes: 0,
+      balls: 0
+    });
+  }
+
+  componentDidUpdate = () => {
+    if(this.state.balls === 4 || this.state.strikes === 3) {
+      this.resetStats();
+    }
+  }
+
+  hit = () => this.resetStats();
+  addBall = () => this.setState({balls: this.state.balls + 1});
+  addFoul = () => this.state.strikes < 2 ? this.setState({strikes: this.state.strikes + 1}) : null;
+  addStrike = () => this.setState({strikes: this.state.strikes + 1});
+
+  render() {
+    return (
+      <div className='App'>
+        <h1>Baseball Dashboard</h1>
+        <Display {...this.state}/>
+        <Dashboard hit={this.hit} addBall={this.addBall} addFoul={this.addFoul} addStrike={this.addStrike}/>
+      </div>
+    );
+  }
 }
 
 export default App;
